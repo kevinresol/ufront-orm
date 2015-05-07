@@ -301,6 +301,7 @@ class Object #if server extends sys.db.Object #end {
 				var m2m:ManyToMany<Dynamic,Dynamic> = Reflect.field(this, f.substr(10));
 				if (m2m!=null) {
 					s.serialize(Type.getClassName(m2m.b));
+					s.serialize(m2m.bList);
 					s.serialize(m2m.bListIDs);
 					s.serialize(m2m.unsavedBObjects);
 				}
@@ -318,6 +319,7 @@ class Object #if server extends sys.db.Object #end {
 					var typeName = relEntry.split(",").pop();
 
 					s.serialize(typeName);
+					s.serialize(null);
 					s.serialize(null);
 					s.serialize(null);
 				}
@@ -343,6 +345,7 @@ class Object #if server extends sys.db.Object #end {
 			}
 			else if (f.startsWith("ManyToMany")) {
 				var bName = s.unserialize();
+				var bList = s.unserialize();
 				var bListIDs = s.unserialize();
 				var unsavedBObjects = s.unserialize();
 
@@ -354,7 +357,7 @@ class Object #if server extends sys.db.Object #end {
 					var m2m = new ManyToMany(this, b);
 					m2m.bListIDs = bListIDs;
 					m2m.unsavedBObjects = unsavedBObjects;
-					m2m.bList = null;
+					m2m.bList = bList;
 					Reflect.setField(this, f.substr(10), m2m);
 				}
 			}
